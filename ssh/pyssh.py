@@ -57,7 +57,7 @@ def ssh_output_filter(_out):
 
 
 def load_config():
-    with open('/Users/eacon/Study/github/Tools/ssh/account.json') as f:
+    with open('/Users/eacon/Study/github/python-tools/ssh/account.json') as f:
         conf = f.read()
     conf_dict = json.loads(conf)
     return conf_dict
