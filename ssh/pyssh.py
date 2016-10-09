@@ -3,6 +3,7 @@ import json
 import sys
 
 from pexpect import pxssh
+from remote import Multihop
 
 
 def main():
@@ -14,7 +15,7 @@ def main():
             ssh(args[1])
     else:
         usage = '\tUsage: pyssh [ -l | <host> | <alias> ]\n'
-        print usage
+        print(usage)
 
 
 def ssh(host):
@@ -29,21 +30,39 @@ def ssh(host):
         _host = host
 
     host_info = config.get(_host)
-    user = host_info.get('username')
-    pwd = host_info.get('password')
+    user = host_info.get('username', '')
+    pwd = host_info.get('password', '')
+    proxy = host_info.get('proxy', '')
 
-    ssh = pxssh.pxssh()
-    if ssh.login(_host, user, pwd):
-        print 'login success'
-        ssh.interact()
-        #
-        # while True:
-        #     _in = raw_input('[{}@{}]: '.format(user, host))
-        #     ssh.sendline(_in)
-        #     ssh.prompt()
-        #     print '\n'.join(ssh.before.split('\n')[1:])
+    if not proxy:
+        ssh = pxssh.pxssh()
+        if ssh.login(_host, user, pwd):
+            print('######## Login Success! ########')
+            try:
+                ssh.interact()
+            except Exception as e:
+                print('Exception occur: \n\t' + str(e))
+                sys.exit('######## Logout! ########')
+            #
+            # while True:
+            #     _in = raw_input('[{}@{}]: '.format(user, host))
+            #     ssh.sendline(_in)
+            #     ssh.prompt()
+            #     print '\n'.join(ssh.before.split('\n')[1:])
+        else:
+            raise Exception('Fail to login!')
     else:
-        raise Exception('Fail to login!')
+        proxy_info = config.get(proxy)
+        intermedia = dict(host=proxy, user=proxy_info['username'], password=proxy_info['password'], type='ssh')
+        dest = dict(host=_host, user=user, password=pwd, type='ssh')
+        ssh = Multihop(hops_info=(intermedia, dest))
+        try:
+            ssh.login()
+            print('######## Login Success! ########')
+            ssh.interactive()
+        except Exception as e:
+            print('Exception occur: \n\t' + str(e))
+            sys.exit('######## Logout! ########')
 
 
 def ssh_input_filter(_in):
@@ -69,7 +88,7 @@ def list_host():
     record = [_out.format('Host', 'User', 'Alias'), '-' * (24 * 3 + 2)]
     for host, info in config.iteritems():
         record.append(_out.format(host, info.get('username', ''), info.get('alias', '')))
-    print '\n'.join(record)
+    print('\n'.join(record))
 
 
 if __name__ == '__main__':

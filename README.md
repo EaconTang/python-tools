@@ -5,3 +5,4 @@
 
 - ssh/pyssh.py
     - 治疗iTerm不能记录ssh连接、管理用户密码
+    - 增加代理功能
