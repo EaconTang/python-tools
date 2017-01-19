@@ -15,7 +15,7 @@ import platform
 
 def main():
     """"""
-    sys.argv = ['file', '-p', '.']
+    # sys.argv = ['file', '-p', '.']
     option, project_path = parse_args(*sys.argv[1:])
     file_type = {
         '-p': 'py',
@@ -27,7 +27,6 @@ def main():
         shell_cmd(project_path, file_type)
     else:
         pass
-
 
 
 def parse_args(*args):
@@ -45,7 +44,6 @@ def parse_args(*args):
             print(usage())
             sys.exit(-1)
     else:
-        sys.stderr.write('Wrong usage!\n')
         print(usage())
         sys.exit(-1)
     return option, project_path
@@ -67,7 +65,12 @@ def usage():
     """"""      
     return '\n'.join([
         'Usage: ',
-        '\tpython code_counter.py [OPTIONS] PROJECT_ROOT_DIR'
+        '\tpython code_counter.py [OPTIONS] PROJECT_ROOT_DIR',
+        '\nOptions',
+        '-p        Python files only, deafult value',
+        '-j        Java files only',
+        '-g        Golang files only',
+        '-c        C/C++ files only'
     ])
 
 
