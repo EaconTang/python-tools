@@ -2,6 +2,7 @@
   "192.168.0.2": {
     "username": "tangyk",
     "password": "tangyk",
-    "alias": "test"
+    "alias": "host-01"
+    "proxy": "192.168.0.3"
   }
 }
