@@ -1,0 +1,32 @@
+{
+  "default_ringtone_folder": "/Users/eacon/Documents/music",
+  "default_ringtone": "gao_bai_qi_qiu.mp3",
+  "default_filter": [
+    "everyday"
+  ],
+  "default_status": "on",
+  "default_label": "default",
+  "clocks": [
+    {
+      "time": "06:00:00",
+      "filter": [
+        "weekday"
+      ]
+    },
+    {
+      "time": "07:00:00",
+      "filter": [
+        "weekday"
+      ]
+    },
+    {
+      "time": "23:00:00"
+    },
+    {
+      "time": "09:00:00",
+      "filter": [
+        "weekend"
+      ]
+    }
+  ]
+}
