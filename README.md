@@ -90,7 +90,7 @@
       -d, --daemon          run as daemon
       --status              show status     
          
-    # 查看闹钟配置         
+    # 通过json文件编辑闹钟，查看闹钟配置示例         
     $ python alarm.py -l
     {
         "clocks": [
