@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import json
 import sys
+import base64
 
 from pexpect import pxssh
 from remote import Multihop
@@ -31,7 +32,7 @@ def ssh(host):
 
     host_info = config.get(_host)
     user = host_info.get('username', '')
-    pwd = host_info.get('password', '')
+    pwd = base64.decodestring(host_info.get('password', ''))
     proxy = host_info.get('proxy', '')
 
     if not proxy:
@@ -53,7 +54,8 @@ def ssh(host):
             raise Exception('Fail to login!')
     else:
         proxy_info = config.get(proxy)
-        intermedia = dict(host=proxy, user=proxy_info['username'], password=proxy_info['password'], type='ssh')
+        intermedia = dict(host=proxy, user=proxy_info['username'], password=base64.decodestring(proxy_info['password']),
+                          type='ssh')
         dest = dict(host=_host, user=user, password=pwd, type='ssh')
         ssh = Multihop(hops_info=(intermedia, dest))
         try:
