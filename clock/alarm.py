@@ -21,7 +21,7 @@ LOG_FILE = '/var/log/eacon-alarm.log'
 logging.basicConfig(
     filename=LOG_FILE,
     level=logging.DEBUG,
-    format="%(asctime)-15s [pid:%(process)d] [tid:%(thread)d] [%(filename)s] [%(levelname)s] %(message)s",
+    format="%(asctime)-15s [pid:%(process)d] [thread:%(threadName)s] [%(filename)s] [%(levelname)s] %(message)s",
 )
 LOG = logging.getLogger(__name__)
 
@@ -147,7 +147,7 @@ def run_clocks(label='all'):
     """
     conf = load_conf()
     clocks = [Clock(clock, conf) for clock in conf['clocks']]
-    clocks = [c for c in clocks if c.status == 'on' and c.istoday]
+    clocks = [c for c in clocks if c.status == 'on']
     if label.lower() != 'all':
         clocks = [c for c in clocks if c.label.lower() == label.lower()]
     for c in clocks:
@@ -234,9 +234,9 @@ class Clock(object):
 
     def start(self):
         """start a new thread(Timer)"""
-        countdown = self.get_count_down(self._time)
+        countdown, next_day = self.get_count_down(self._time)
         music_path = os.path.join(self._ringtone_folder, self._ringtone)
-        if countdown >= 0:
+        if self.filter_day(next_day=next_day):
             t = Timer(countdown, self.play_music, [music_path])
             LOG.debug(
                 'Clock(id:{})-Thread: name:{}, ident:{}, interval:{}, isAlive:{}, finished:{}, isDaemon:{}, '.format(
@@ -256,10 +256,11 @@ class Clock(object):
     def status(self):
         return self._status
 
-    @property
-    def istoday(self):
+    def filter_day(self, next_day=False):
         """filter day"""
         _, _, _, _, _, _, tm_wday, _, _ = time.localtime()
+        if next_day:
+            tm_wday += 1
         d = {
             'mon': [0],
             'tue': [1],
@@ -272,7 +273,6 @@ class Clock(object):
             'weekend': range(5, 7),
             'everyday': range(7),
         }
-        res = []
         for _ in self._filter:
             if tm_wday in d.get(_.lower(), []):
                 return True
@@ -301,11 +301,13 @@ class Clock(object):
 
         if clock_timestamp >= now_timestamp:
             countdown = clock_timestamp - now_timestamp
+            next_day = False
         else:
             # that means clock time is passed today, will count to next day
             countdown = 24 * 60 * 60 - (now_timestamp - clock_timestamp)
+            next_day = True
         LOG.debug('Countdown seconds: {}'.format(countdown))
-        return countdown
+        return countdown, next_day
 
     def play_music(self, music_path):
         """

@@ -16,13 +16,8 @@
     {
       "time": "07:30:00",
       "filter": [
-        "weekday"
-      ]
-    },
-    {
-      "time": "17:59:00",
-      "filter": [
-        "weekend"
+        "weekday",
+        "sun"
       ]
     },
     {
