@@ -285,6 +285,10 @@ class Clock(object):
         :type time_str: str
         :return:
         """
+        _, _, _, tm_hour, tm_min, tm_sec, _, _, _ = time.localtime()
+        now_timestamp = sum((tm_sec, tm_min * 60, tm_hour * 60 * 60))
+        LOG.debug('now_timestamp: {}'.format(now_timestamp))
+
         if re.match(r'\d+:\d+:\d+', time_str):
             h, m, s = time_str.split(':')
         elif re.match(r'\d+:\d+', time_str):
@@ -293,13 +297,14 @@ class Clock(object):
         else:
             raise TypeError("Wrong type for time:" + str(time_str))
         clock_timestamp = sum((int(s), int(m) * 60, int(h) * 60 * 60))
+        LOG.debug('clock_timestamp: {}'.format(clock_timestamp))
 
-        _, _, _, tm_hour, tm_min, tm_sec, _, _, _ = time.localtime()
-        now_timestamp = sum((tm_sec, tm_min * 60, tm_hour * 60 * 60))
-
-        countdown = clock_timestamp - now_timestamp
-        if countdown < 0:
-            countdown = 24 * 60 * 60 - countdown
+        if clock_timestamp >= now_timestamp:
+            countdown = clock_timestamp - now_timestamp
+        else:
+            # that means clock time is passed today, will count to next day
+            countdown = 24 * 60 * 60 - (now_timestamp - clock_timestamp)
+        LOG.debug('Countdown seconds: {}'.format(countdown))
         return countdown
 
     def play_music(self, music_path):
