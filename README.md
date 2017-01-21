@@ -4,8 +4,9 @@
 日常使用的自制工具
 
 - ssh/pyssh.py
-    - json文件记录ssh连接、管理用户密码
-    - 支持主机跳转
+    - SSH连接工具
+    - json文件记录用户密码
+    - 支持代理跳转
 - code/code_counter.py
     + 代码行数统计
 - alarm-clock
@@ -17,7 +18,7 @@
     + 作为守护进程运行
         
         
-### pyssh
+### SSH连接工具
 展示主机列表：
 
     $ python pyssh.py -l
