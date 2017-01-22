@@ -55,6 +55,7 @@ def main():
         LOG.info('Stop all clocks...')
         stop_clocks()
         return
+    save_pid(PID_FILE)
     if options.run_all_clock:
         LOG.info('Run all alarm...')
         loop_forever(24 * 60 * 60, run_clocks, func_args=['all'])
@@ -193,7 +194,7 @@ def daemonize():
     make it daemon process
     :return:
     """
-    LOG.info('Start as daemon process, pid file: {}'.format(PID_FILE))
+    LOG.info('Start as daemon process...')
     pid = os.fork()
     if pid:
         sys.exit(0)
@@ -214,10 +215,13 @@ def daemonize():
         os.dup2(write_null.fileno(), sys.stdout.fileno())
         os.dup2(write_null.fileno(), sys.stderr.fileno())
 
-    if PID_FILE:
-        with open(PID_FILE, 'w+') as f:
+
+def save_pid(pid_file):
+    if pid_file:
+        LOG.info("pid saved to file: {}".format(pid_file))
+        with open(pid_file, 'w+') as f:
             f.write(str(os.getpid()))
-        atexit.register(os.remove, PID_FILE)
+        atexit.register(os.remove, pid_file)
 
 
 class Clock(object):
@@ -230,23 +234,31 @@ class Clock(object):
         self._filter = clock.get('filter', defaults['default_filter'])
         self._status = clock.get('status', defaults['default_status'])
         self._label = clock.get('label', defaults['default_label'])
-        self._time = clock.get('time', -1)
+        self._time = clock.get('time', None)
+        self._name = clock.get('name', None)
 
     def start(self):
         """start a new thread(Timer)"""
         countdown, next_day = self.get_count_down(self._time)
         music_path = os.path.join(self._ringtone_folder, self._ringtone)
         if self.filter_day(next_day=next_day):
-            t = Timer(countdown, self.play_music, [music_path])
+            t = Timer(countdown, self.play_music, [music_path])  # new thread
+            if self._name:
+                t.setName(str(self._name))  # custom name
+            else:
+                t.setName(str(self._time))  # named by its clock time
+            t.setDaemon(True)  # make sure it die with MainThread
             LOG.debug(
-                'Clock(id:{})-Thread: name:{}, ident:{}, interval:{}, isAlive:{}, finished:{}, isDaemon:{}, '.format(
-                    id(self), t.getName(), t.ident, t.interval, t.is_alive, t.finished, t.isDaemon()
+                'Clock(id:{})-Thread: name:{}, ident:{}, interval:{}, isAlive:{}, isDaemon:{}, '.format(
+                    id(self), t.getName(), t.ident, t.interval, t.isAlive(), t.isDaemon()
                 )
             )
             t.start()
             LOG.info('A new clock(id:{}) is started! Clock time:{}, ringtone: {}'.format(
                 id(self), self._time, music_path
             ))
+        else:
+            LOG.info('Clock(id:{}) is ignored!'.format(id(self)))
 
     @property
     def label(self):
@@ -261,6 +273,7 @@ class Clock(object):
         _, _, _, _, _, _, tm_wday, _, _ = time.localtime()
         if next_day:
             tm_wday += 1
+            tm_wday %= tm_wday
         d = {
             'mon': [0],
             'tue': [1],
@@ -276,9 +289,9 @@ class Clock(object):
         for _ in self._filter:
             if tm_wday in d.get(_.lower(), []):
                 return True
+        return False
 
-    @staticmethod
-    def get_count_down(time_str):
+    def get_count_down(self, time_str):
         """
         count alarm time from now
         :param time_str:
@@ -287,7 +300,6 @@ class Clock(object):
         """
         _, _, _, tm_hour, tm_min, tm_sec, _, _, _ = time.localtime()
         now_timestamp = sum((tm_sec, tm_min * 60, tm_hour * 60 * 60))
-        LOG.debug('now_timestamp: {}'.format(now_timestamp))
 
         if re.match(r'\d+:\d+:\d+', time_str):
             h, m, s = time_str.split(':')
@@ -297,7 +309,6 @@ class Clock(object):
         else:
             raise TypeError("Wrong type for time:" + str(time_str))
         clock_timestamp = sum((int(s), int(m) * 60, int(h) * 60 * 60))
-        LOG.debug('clock_timestamp: {}'.format(clock_timestamp))
 
         if clock_timestamp >= now_timestamp:
             countdown = clock_timestamp - now_timestamp
@@ -306,7 +317,7 @@ class Clock(object):
             # that means clock time is passed today, will count to next day
             countdown = 24 * 60 * 60 - (now_timestamp - clock_timestamp)
             next_day = True
-        LOG.debug('Countdown seconds: {}'.format(countdown))
+        LOG.debug('Clock(id:{}) countdown seconds: {}'.format(id(self), countdown))
         return countdown, next_day
 
     def play_music(self, music_path):
