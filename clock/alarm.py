@@ -68,11 +68,13 @@ def main():
     save_pid(PID_FILE)
     if options.run_all_clock:
         LOG.info('Run all alarm...')
-        loop_forever(24 * 60 * 60, _run_clocks, func_args=['all'])
+        _run_clocks('all')
+        # loop_forever(24 * 60 * 60, _run_clocks, func_args=['all'])
         return
     if options.run_label is not None:
         LOG.info('Run alarm with label: {}'.format(options.run_label))
-        loop_forever(24 * 60 * 60, _run_clocks, func_args=[str(options.run_label)])
+        _run_clocks(str(options.run_label))
+        # loop_forever(24 * 60 * 60, _run_clocks, func_args=[str(options.run_label)])
         return
 
 
@@ -130,8 +132,7 @@ def loop_forever(interval, func, func_args=None, func_kwargs=None, callback=None
     func_args = func_args if func_args else []
     func_kwargs = func_kwargs if func_kwargs else {}
     error_count = 0
-    # while True:
-    if True:
+    while True:
         try:
             LOG.info('Start a new loop...')
             func(*func_args, **func_kwargs)
@@ -141,12 +142,12 @@ def loop_forever(interval, func, func_args=None, func_kwargs=None, callback=None
                 eval(callback['func_name'])(*callback.get('func_args', []), **callback.get('func_kwargs', {}))
         except Exception as e:
             LOG.error(e.message)
-            # error_count += 1
-            # if error_count <= 3:
-            #    continue
-            #else:
-            #    LOG.error('Too many errors, we will exit the loop.')
-            #    break
+            error_count += 1
+            if error_count <= 3:
+                continue
+            else:
+                LOG.error('Too many errors, we will exit the loop.')
+                break
 
 
 def run_clocks(label='all'):
@@ -162,6 +163,10 @@ def run_clocks(label='all'):
         clocks = [c for c in clocks if c.label.lower() == label.lower()]
     for c in clocks:
         c.start()
+    for c in clocks:
+        c.join()
+    LOG.info("All clocks are done! Existing main thread...")
+    stop_clocks()
 
 
 def stop_clocks():
@@ -246,13 +251,14 @@ class Clock(object):
         self._label = clock.get('label', defaults['default_label'])
         self._time = clock.get('time', None)
         self._name = clock.get('name', None)
+        self._thread = None
 
     def start(self):
         """start a new thread(Timer)"""
         countdown, next_day = self.get_count_down(self._time)
         music_path = os.path.join(self._ringtone_folder, self._ringtone)
         if self.filter_day(next_day=next_day):
-            t = Timer(countdown, self.play_music, [music_path])  # new thread
+            t = self._thread = Timer(countdown, self.play_music, [music_path])  # new thread
             if self._name:
                 t.setName(str(self._name))  # custom name
             else:
@@ -269,6 +275,10 @@ class Clock(object):
             ))
         else:
             LOG.info('Clock(id:{}) is ignored!'.format(id(self)))
+
+    def join(self):
+        if self._thread:
+            self._thread.join()
 
     @property
     def label(self):
