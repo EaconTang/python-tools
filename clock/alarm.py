@@ -28,6 +28,16 @@ LOG = logging.getLogger(__name__)
 
 def main():
     """"""
+    try:
+        from apscheduler_alarm import SchedClocks
+        if SchedClocks.is_available():
+            # redirect _run_clocks() method
+            _run_clocks = SchedClocks.run_clocks
+        else:
+            raise NotImplementedError
+    except (ImportError, NotImplementedError):
+        _run_clocks = run_clocks
+
     options = parse_args()
     if options.list_clock:
         LOG.info('List all alarm...')
@@ -58,11 +68,11 @@ def main():
     save_pid(PID_FILE)
     if options.run_all_clock:
         LOG.info('Run all alarm...')
-        loop_forever(24 * 60 * 60, run_clocks, func_args=['all'])
+        loop_forever(24 * 60 * 60, _run_clocks, func_args=['all'])
         return
     if options.run_label is not None:
         LOG.info('Run alarm with label: {}'.format(options.run_label))
-        loop_forever(24 * 60 * 60, run_clocks, func_args=[str(options.run_label)])
+        loop_forever(24 * 60 * 60, _run_clocks, func_args=[str(options.run_label)])
         return
 
 
@@ -117,12 +127,11 @@ def loop_forever(interval, func, func_args=None, func_kwargs=None, callback=None
         {func_name: , func_args: , func_kwargs: }
     :return:
     """
-    if func_args is None:
-        func_args = []
-    if func_kwargs is None:
-        func_kwargs = {}
+    func_args = func_args if func_args else []
+    func_kwargs = func_kwargs if func_kwargs else {}
     error_count = 0
-    while True:
+    # while True:
+    if True:
         try:
             LOG.info('Start a new loop...')
             func(*func_args, **func_kwargs)
@@ -132,12 +141,12 @@ def loop_forever(interval, func, func_args=None, func_kwargs=None, callback=None
                 eval(callback['func_name'])(*callback.get('func_args', []), **callback.get('func_kwargs', {}))
         except Exception as e:
             LOG.error(e.message)
-            error_count += 1
-            if error_count <= 3:
-                continue
-            else:
-                LOG.error('Too many errors, we will exit the loop.')
-                break
+            # error_count += 1
+            # if error_count <= 3:
+            #    continue
+            #else:
+            #    LOG.error('Too many errors, we will exit the loop.')
+            #    break
 
 
 def run_clocks(label='all'):
@@ -228,6 +237,7 @@ class Clock(object):
     """
     Each clock instance as a thread
     """
+
     def __init__(self, clock, defaults):
         self._ringtone_folder = clock.get('ringtone_folder', defaults['default_ringtone_folder'])
         self._ringtone = clock.get('ringtone', defaults['default_ringtone'])

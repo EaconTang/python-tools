@@ -16,12 +16,12 @@
     {
       "time": "07:30:00",
       "filter": [
-        "weekday",
-        "sun"
-      ]
+        "weekday"
+      ],
+      "name": "go_to_work"
     },
     {
-      "time": "09:00:00",
+      "time": "08:00:00",
       "filter": [
         "weekend"
       ]
