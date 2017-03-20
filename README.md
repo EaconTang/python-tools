@@ -172,7 +172,7 @@
     $ ln -s <path-to-alarm.py> </usr/local/bin/pyalarm>
     $ pyalarm -h
     
-### MacOS通知脚本
+## MacOS通知脚本
 1. sys_notify/rest.py
     - MacOS的系统通知脚本：告诉自己，工作时间每隔一小时记得喝点水、起来走走、并且上个洗手间～
     - 示例：
