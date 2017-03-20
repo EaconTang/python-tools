@@ -16,6 +16,9 @@
     + 支持定义只在工作日、周末、或者具体周一／周二闹铃
     + 热更新
     + 作为守护进程运行
+- sys_notify
+    + MacOS的系统通知脚本：告诉自己，工作时间每隔一小时记得喝点水、起来走走、并且上个洗手间～
+        > Drink water, see around and pee.
         
         
 ### SSH连接工具
@@ -168,3 +171,10 @@
     
     $ ln -s <path-to-alarm.py> </usr/local/bin/pyalarm>
     $ pyalarm -h
+    
+### MacOS通知脚本
+1. sys_notify/rest.py
+    - MacOS的系统通知脚本：告诉自己，工作时间每隔一小时记得喝点水、起来走走、并且上个洗手间～
+    - 示例：
+        - ![](./img/sys_notify_01.png)
+        - ![](./img/sys_notify_02.png)
