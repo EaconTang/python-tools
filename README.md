@@ -186,7 +186,8 @@
 ## 七牛文件上传
 1. qiniu_manager/qn_upfile.py  
     参数分别为：本地文件路径、上传文件key、七牛bucket空间名
-     > python qn_upfile.py <file_path> <key> [bucket_name]
+    
+            python qn_upfile.py <file_path> <key> [bucket_name]
     
     示例：
     
