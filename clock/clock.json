@@ -21,6 +21,12 @@
       "name": "go_to_work"
     },
     {
+      "time": "03:30:00",
+      "filter": [
+        "weekday"
+      ]
+    },
+    {
       "time": "08:00:00",
       "filter": [
         "weekend"

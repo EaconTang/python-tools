@@ -3,3 +3,4 @@
 *~
 ssh/account.json
 nohup.out
+qiniu_manager/config.py
