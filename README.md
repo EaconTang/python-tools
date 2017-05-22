@@ -184,20 +184,20 @@
         
         
 ## 七牛文件上传
-1. qiniu_manager/qn_upfile.py
+1. qiniu_manager/qn_upfile.py  
     参数分别为：本地文件路径、上传文件key、七牛bucket空间名
      > python qn_upfile.py <file_path> <key> [bucket_name]
     
     示例：
     
         
-    eacon•~/Downloads» qn_upfile eacon-log.png image/2017/05/eacon-log.png static-tangyingkang-com                                                                          [17:59:01]
-    Upload detail:
-        bucket-name: static-tangyingkang-com
-        key-name: image/2017/05/eacon-log.png
-        local-file: /Users/eacon/Downloads/eacon-log.png
-    Result:
-        {u'hash': u'FlnYuBK8D0CH8Dh52ZatUJMpUF6O', u'key': u'image/2017/05/eacon-log.png'}
-        exception:None, status_code:200, _ResponseInfo__response:<Response [200]>, text_body:{"hash":"FlnYuBK8D0CH8Dh52ZatUJMpUF6O","key":"image/2017/05/eacon-log.png"}, req_id:nAoAAAOYUNFR5cAU, x_log:body:69;s.ph;s.put.tw;s.put.tr:19;s.put.tw;s.put.tr:19;s.ph;PFDS:20;PFDS:20;rs2_1.sel:1/not found;rs1_1.sel:1/not found;rs2_1.ups:1;rwro.ups:4;mc.s/500;RS:5;rs.put:6;rs-upload.putFile:28;UP:98
-    Url:
-        http://cdn.tangyingkang.com/image/2017/05/eacon-log.png
+        eacon•~/Downloads» qn_upfile eacon-log.png image/2017/05/eacon-log.png static-tangyingkang-com                                                                          [17:59:01]
+        Upload detail:
+            bucket-name: static-tangyingkang-com
+            key-name: image/2017/05/eacon-log.png
+            local-file: /Users/eacon/Downloads/eacon-log.png
+        Result:
+            {u'hash': u'FlnYuBK8D0CH8Dh52ZatUJMpUF6O', u'key': u'image/2017/05/eacon-log.png'}
+            exception:None, status_code:200, _ResponseInfo__response:<Response [200]>, text_body:{"hash":"FlnYuBK8D0CH8Dh52ZatUJMpUF6O","key":"image/2017/05/eacon-log.png"}, req_id:nAoAAAOYUNFR5cAU, x_log:body:69;s.ph;s.put.tw;s.put.tr:19;s.put.tw;s.put.tr:19;s.ph;PFDS:20;PFDS:20;rs2_1.sel:1/not found;rs1_1.sel:1/not found;rs2_1.ups:1;rwro.ups:4;mc.s/500;RS:5;rs.put:6;rs-upload.putFile:28;UP:98
+        Url:
+            http://cdn.tangyingkang.com/image/2017/05/eacon-log.png
