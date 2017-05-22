@@ -191,13 +191,13 @@
     示例：
     
         
-        eacon•~/Downloads» qn_upfile eacon-log.png image/2017/05/eacon-log.png static-tangyingkang-com                                                                          [17:59:01]
+        eacon•~/Downloads» qn_upfile eacon-logo.png image/2017/05/eacon-logo.png
         Upload detail:
             bucket-name: static-tangyingkang-com
-            key-name: image/2017/05/eacon-log.png
-            local-file: /Users/eacon/Downloads/eacon-log.png
+            key-name: image/2017/05/eacon-logo.png
+            local-file: /Users/eacon/Downloads/eacon-logo.png
         Result:
-            {u'hash': u'FlnYuBK8D0CH8Dh52ZatUJMpUF6O', u'key': u'image/2017/05/eacon-log.png'}
-            exception:None, status_code:200, _ResponseInfo__response:<Response [200]>, text_body:{"hash":"FlnYuBK8D0CH8Dh52ZatUJMpUF6O","key":"image/2017/05/eacon-log.png"}, req_id:nAoAAAOYUNFR5cAU, x_log:body:69;s.ph;s.put.tw;s.put.tr:19;s.put.tw;s.put.tr:19;s.ph;PFDS:20;PFDS:20;rs2_1.sel:1/not found;rs1_1.sel:1/not found;rs2_1.ups:1;rwro.ups:4;mc.s/500;RS:5;rs.put:6;rs-upload.putFile:28;UP:98
+            {u'hash': u'FlnYuBK8D0CH8Dh52ZatUJMpUF6O', u'key': u'image/2017/05/eacon-logo.png'}
+            exception:None, status_code:200, _ResponseInfo__response:<Response [200]>, text_body:{"hash":"FlnYuBK8D0CH8Dh52ZatUJMpUF6O","key":"image/2017/05/eacon-logo.png"}, req_id:f2AAALcgaIL55cAU, x_log:body:12;s.ph;s.put.tw;s.put.tr:11;s.put.tw;s.put.tr:14;s.ph;PFDS:15;PFDS:15;rs2_0.sel/not found;rs1_0.sel/not found;rs2_0.ups;rwro.ups:1;mc.s/500;RS:2;rs.put:2;rs-upload.putFile:18;UP:33
         Url:
-            http://cdn.tangyingkang.com/image/2017/05/eacon-log.png
+            http://cdn.tangyingkang.com/image/2017/05/eacon-logo.png
