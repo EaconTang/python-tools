@@ -22,6 +22,9 @@
 - qiniu_manager
     + qn_upfile.py
         - 一句命令行上传文件到七牛云
+    + qnctl.py
+        - 七牛云文件管理
+            + 列出指定bucket所有文件的访问地址（结合grep即可实现搜索）
         
         
 ### SSH连接工具
@@ -202,3 +205,38 @@
             exception:None, status_code:200, _ResponseInfo__response:<Response [200]>, text_body:{"hash":"FlnYuBK8D0CH8Dh52ZatUJMpUF6O","key":"image/2017/05/eacon-logo.png"}, req_id:f2AAALcgaIL55cAU, x_log:body:12;s.ph;s.put.tw;s.put.tr:11;s.put.tw;s.put.tr:14;s.ph;PFDS:15;PFDS:15;rs2_0.sel/not found;rs1_0.sel/not found;rs2_0.ups;rwro.ups:1;mc.s/500;RS:2;rs.put:2;rs-upload.putFile:18;UP:33
         Url:
             http://cdn.tangyingkang.com/image/2017/05/eacon-logo.png
+            
+            
+2. qiniu_manager/qnctl.py
+    参数：
+    
+        eacon➜~/Downloads» qnctl -h                                                                                                                                             [15:18:05]
+        Usage: qnctl [options]
+        
+        Qiniu manger
+        
+        Options:
+          -h, --help            show this help message and exit
+          --list-bucket=LIST_BUCKET
+                                list bucket
+          --web                 web browser for file manger
+    
+
+
+   示例：
+    
+        eacon➜~/Downloads» qnctl --list-bucket eacontangforwebsite|grep -i weibo                                                                                                [15:17:46]
+        http://qn.tangyingkang.com/image/weibo/
+        http://qn.tangyingkang.com/image/weibo/050111.jpg
+        http://qn.tangyingkang.com/image/weibo/050212.jpg
+        http://qn.tangyingkang.com/image/weibo/140820.jpg
+        http://qn.tangyingkang.com/image/weibo/jgz01.gif
+        http://qn.tangyingkang.com/image/weibo/lushan/
+        http://qn.tangyingkang.com/image/weibo/lushan/01.png
+        http://qn.tangyingkang.com/image/weibo/lushan/02.png
+        http://qn.tangyingkang.com/image/weibo/lushan/03.png
+        http://qn.tangyingkang.com/image/weibo/lvdeshui.jpg
+        http://qn.tangyingkang.com/image/weibo/sys_notify_gopee.png
+        http://qn.tangyingkang.com/image/weibo/xiangsheng01.png
+        http://qn.tangyingkang.com/image/weibo/xs01.jpeg
+        http://qn.tangyingkang.com/image/weibo/xs09.jpeg
