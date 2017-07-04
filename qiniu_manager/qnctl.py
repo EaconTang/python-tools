@@ -16,7 +16,7 @@ from config import ACCESS_KEY, SECRET_KEY, DEFAULT_BUCKET, BUCKET_DOMAIN
 def parse_args():
     """参数解析"""
     parser = OptionParser(description='Qiniu manger')
-    parser.add_option('--list-bucket', dest='list_bucket', default=DEFAULT_BUCKET,
+    parser.add_option('--list-bucket', dest='list_bucket', default=False,
                       help='list bucket')
     parser.add_option('--web', dest='web', default=False, action='store_true',
                       help='web browser for file manger')
